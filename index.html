@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С Днём отца!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f1115;
+            --card-bg: #181b22;
+            --text-main: #f0f2f5;
+            --text-muted: #9ca3af;
+            --accent: #d4af37;
+            --accent-hover: #e5c158;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* Конверт */
+        .envelope-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .envelope-container.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .envelope {
+            background: linear-gradient(135deg, #1f232b 0%, #14171d 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 40px 60px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            cursor: pointer;
+            transition: transform 0.4s ease, border-color 0.4s ease;
+            max-width: 90%;
+            width: 400px;
+        }
+
+        .envelope:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .envelope-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .envelope h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .envelope p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .open-btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 12px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .open-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Основной контент */
+        .main-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease 0.4s, transform 1s ease 0.4s;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px 20px;
+            display: none;
+        }
+
+        .main-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        .letter-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .letter-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #d1d5db;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Фото блок */
+        .photo-section {
+            text-align: center;
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        }
+
+        .photo-section h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .photo-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            height: 550px;
+            margin: 0 auto 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            cursor: pointer;
+        }
+
+        .photo-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.6s ease;
+        }
+
+        .photo-1 {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .photo-2 {
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .photo-container.active .photo-1 {
+            opacity: 0;
+        }
+
+        .photo-container.active .photo-2 {
+            opacity: 1;
+        }
+
+        .photo-hint {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .final-wish {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            color: var(--accent);
+            line-height: 1.5;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .letter-card {
+                padding: 20px;
+            }
+            .envelope {
+                padding: 30px 20px;
+            }
+            .photo-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Конверт -->
+    <div class="envelope-container" id="envelopeContainer">
+        <div class="envelope" onclick="openLetter()">
+            <div class="envelope-icon">✉️</div>
+            <h2>Личное письмо</h2>
+            <p>Нажми, чтобы открыть поздравление</p>
+            <button class="open-btn">Открыть</button>
+        </div>
+    </div>
+
+    <!-- Основной сайт -->
+    <div class="main-content" id="mainContent">
+        <div class="letter-card">
+            <h1>Дорогой папа!</h1>
+            <p class="letter-text">
+                Знаешь, глядя на время и на то, как всё вокруг меняется, я остро понимаю, как быстро летит жизнь. Менялся я, менялся мир вокруг, но твоя поддержка, твоя мудрость и твоё надежное плечо всегда оставались для меня главным оплотом.
+            </p>
+            <p class="letter-text">
+                Пользуясь случаем, я хочу сказать тебе огромное спасибо за всё и искренне попросить прощения за те моменты, когда бывал резким, грубил или не слушал твоих советов. Я знаю, что порой бываю неправ, и мне очень жаль. Спасибо за твоё бесконечное терпение и за то, что ты всегда рядом, несмотря ни на что. Ты — мой главный жизненный ориентир.
+            </p>
+        </div>
+
+        <div class="photo-section">
+            <h3>10 лет вместе</h3>
+            <p class="photo-hint">Наведи курсор или нажми на фото, чтобы увидеть разницу в 10 лет</p>
+            
+            <div class="photo-container" id="photoContainer" onclick="togglePhoto()">
+                <!-- Первая фотография (прошлое) -->
+                <img src="photo1.jpg" alt="Фото в прошлом" class="photo-1"[cite: 1]>
+                <!-- Вторая фотография (настоящее) -->
+                <img src="photo2.jpg" alt="Фото спустя 10 лет" class="photo-2"[cite: 2]>
+            </div>
+
+            <p class="final-wish">
+                За эти 10 лет изменилось многое, но я от всего сердца не хочу, чтобы ты старел. Крепкого тебе здоровья, долгих лет и пусть всё задуманное обязательно сбывается! С праздником, с Днём отца!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function openLetter() {
+            const envelope = document.getElementById('envelopeContainer');
+            const content = document.getElementById('mainContent');
+            
+            envelope.classList.add('hidden');
+            content.classList.add('visible');
+        }
+
+        // Интерактив для переключения фото по клику / касанию
+        const photoContainer = document.getElementById('photoContainer');
+        photoContainer.addEventListener('click', () => {
+            photoContainer.classList.toggle('active');
+        });
+
+        // Также поддержим наведение мышки для ПК
+        photoContainer.addEventListener('mouseenter', () => {
+            photoContainer.classList.add('active');
+        });
+        photoContainer.addEventListener('mouseleave', () => {
+            photoContainer.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
